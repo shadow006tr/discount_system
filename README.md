@@ -1,9 +1,36 @@
-# Discount React + Spring app
-###by Maor Zohar
-###and Danny Wisotsky
+# rest-server
 
-We have built the app on React with bootstrap and Spring.
+schema name: ashCollege
 
-Maor made most of the backend, I made the frontend.
+-- auto-generated definition
+create table posts
+(
+    id            int auto_increment,
+    content       longtext null,
+    creation_date datetime null,
+    author_id     int      null,
+    constraint posts_id_uindex
+        unique (id),
+    constraint posts_users_id_fk
+        foreign key (author_id) references users (id)
+);
 
-Both of the apps (frontend and backend) are in this git. You just need to pull the branch that you want.
+alter table posts
+    add primary key (id);
+
+
+
+-- auto-generated definition
+create table users
+(
+    id       int auto_increment,
+    username longtext null,
+    password longtext null,
+    token    longtext null,
+    constraint table_name_id_uindex
+        unique (id)
+);
+
+alter table users
+    add primary key (id);
+
