@@ -1,5 +1,7 @@
 package com.dev.objects;
 
+import org.hibernate.annotations.ColumnDefault;
+
 import javax.persistence.*;
 import java.util.HashSet;
 import java.util.List;
@@ -22,7 +24,8 @@ public class UserObject {
     @Column(nullable = false)
     private String token;
 
-    @Column(name="counter")
+    @ColumnDefault("0")
+    @Column(name="counter" )
     private int counterLogins ;
 
 

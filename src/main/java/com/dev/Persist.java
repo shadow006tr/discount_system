@@ -130,7 +130,14 @@ public class Persist {
     private int getIdOfOrganizationByName(String name){
         Session session = sessionFactory.openSession();
         OrganizationObject org=(OrganizationObject) session.createQuery("FROM OrganizationObject WHERE  organizationName= :name").setParameter("name",name).uniqueResult();
+        session.close();
         return org.getOrganizationId();
     }
 
+    public List<StoreObject> getAllShops() {
+        Session session = sessionFactory.openSession();
+        List<StoreObject> shops=(List<StoreObject>)session.createQuery("from StoreObject select *").list();
+        session.close();
+        return shops;
+    }
 }

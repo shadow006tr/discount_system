@@ -2,6 +2,7 @@ package com.dev.controllers;
 
 import com.dev.Persist;
 import com.dev.objects.DiscountObject;
+import com.dev.objects.StoreObject;
 import com.dev.objects.UserObject;
 
 import com.dev.utils.Utils;
@@ -80,7 +81,10 @@ public class TestController {
         return persist.getAllSales(token);
     }
 
-    
+    @RequestMapping("get-all-shops")
+    public List <StoreObject> getAllShops(){
+        return persist.getAllShops();
+    }
 
 
 
