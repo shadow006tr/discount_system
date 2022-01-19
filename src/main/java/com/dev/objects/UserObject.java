@@ -28,6 +28,8 @@ public class UserObject {
     @Column(name="counter" )
     private int counterLogins ;
 
+    @Column()
+    private boolean firstLogin;
 
 
     @ManyToMany
@@ -36,14 +38,13 @@ public class UserObject {
     Set<OrganizationObject> organizations = new HashSet<>();
 
     public UserObject() {
-        counterLogins=0;
+
     }
 
     public UserObject(String username, String password, String token) {
         this.username = username;
         this.password = password;
         this.token = token;
-        counterLogins=0;
     }
 
     public String getUsername() {
@@ -97,5 +98,13 @@ public class UserObject {
 
     public void deleteOrganization(OrganizationObject organization) {
         this.organizations.remove(organization);
+    }
+
+    public Boolean getFirstLogin() {
+        return firstLogin;
+    }
+
+    public void setFirstLogin(Boolean firstLogin) {
+        this.firstLogin = firstLogin;
     }
 }

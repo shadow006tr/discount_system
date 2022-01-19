@@ -7,10 +7,12 @@ import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
 import java.util.List;
 
 @Component
 public class Persist {
+    static final String BLOCKED_USER="-1";
     private final SessionFactory sessionFactory;
 
     @Autowired
@@ -22,9 +24,11 @@ public class Persist {
         List<DiscountObject> discounts = null;
         Session session = sessionFactory.openSession();
         UserObject user=getUserFromDatabaseWithToken(session,token);
-        for(OrganizationObject org:user.getOrganizations()){
-            for(DiscountObject discount :org.getOperation()){
-                discounts.add(discount);
+        if (user!=null) {
+            for (OrganizationObject org : user.getOrganizations()) {
+                for (DiscountObject discount : org.getOperation()) {
+                    discounts.add(discount);
+                }
             }
         }
         session.close();
@@ -38,11 +42,20 @@ public class Persist {
                 .setParameter("username", username)
                 .setParameter("password", password)
                 .uniqueResult();
-        session.close();
+
         if (userObject != null) {
-            token = userObject.getToken();
+            if (userObject.getCounterLogins()>=5) token=BLOCKED_USER;
+            else token = userObject.getToken();
         }
+        session.close();
         return token;
+    }
+
+    private void updateCounter(UserObject userObject, Session session) {
+        userObject.setCounterLogins(userObject.getCounterLogins()+1);
+        Transaction transaction = session.beginTransaction();
+        session.saveOrUpdate(userObject);
+        transaction.commit();
     }
 
     public boolean addAccount (UserObject userObject) {
@@ -76,11 +89,11 @@ public class Persist {
 
 
 
-    public void updateMembership(String token, String name, boolean doMembership) {
+    public void updateMembership(String token, int id, boolean doMembership) {
         Session session = sessionFactory.openSession();
         Transaction transaction = session.beginTransaction();
         UserObject userObject = getUserFromDatabaseWithToken(session,token);
-        OrganizationObject organization =getOrganizationFromDatabaseWithName(session,name);
+        OrganizationObject organization =getOrganizationFromDatabaseWithName(session,id);
         if (doMembership){
             userObject.addOrganization(organization);
         }else{
@@ -91,8 +104,8 @@ public class Persist {
         session.close();
     }
 
-    private OrganizationObject getOrganizationFromDatabaseWithName(Session session, String name) {
-        return (OrganizationObject)session.createQuery("FROM OrganizationObject WHERE organizationName=:name").setParameter("name",name).uniqueResult();
+    private OrganizationObject getOrganizationFromDatabaseWithName(Session session, int id ){
+        return (OrganizationObject)session.createQuery("FROM OrganizationObject WHERE id=:id").setParameter("id",id).uniqueResult();
     }
 
     private UserObject getUserFromDatabaseWithToken(Session session, String token) {
@@ -117,27 +130,18 @@ public class Persist {
         return discounts;
     }
 
-    public int getCounterLogins(String token) {
-        Session session = sessionFactory.openSession();
-        UserObject userObject = (UserObject) session.createQuery("FROM UserObject WHERE token = :token")
-                .setParameter("token", token)
-                .uniqueResult();
-        session.close();
-        return userObject.getCounterLogins();
-
-    }
-
-    private int getIdOfOrganizationByName(String name){
-        Session session = sessionFactory.openSession();
-        OrganizationObject org=(OrganizationObject) session.createQuery("FROM OrganizationObject WHERE  organizationName= :name").setParameter("name",name).uniqueResult();
-        session.close();
-        return org.getOrganizationId();
-    }
 
     public List<StoreObject> getAllShops() {
         Session session = sessionFactory.openSession();
-        List<StoreObject> shops=(List<StoreObject>)session.createQuery("from StoreObject select *").list();
+        List<StoreObject> shops =(List<StoreObject>)session.createCriteria(StoreObject.class).list();
         session.close();
         return shops;
+    }
+
+    public boolean cheakFirstLogin(String token) {
+        Session session = sessionFactory.openSession();
+        UserObject u=getUserFromDatabaseWithToken(session,token);
+        return u.getFirstLogin();
+
     }
 }

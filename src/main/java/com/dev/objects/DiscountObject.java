@@ -37,6 +37,7 @@ public class DiscountObject {
     private boolean relevantFotUser=false;
 
 
+
     public DiscountObject(String discount, Date discountStart, Date discountEnd, boolean isGlobal) {
         this.discount = discount;
         this.discountStart = discountStart;

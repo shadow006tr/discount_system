@@ -35,7 +35,7 @@ public class TestController {
     private void init () {
 
     }
-
+// If the user blocked the token will be -1
     @RequestMapping("sign-in")
     public String signIn (String username, String password) {
         return persist.getTokenByUsernameAndPassword(username, password);
@@ -48,6 +48,8 @@ public class TestController {
         if (!alreadyExists) {
             String hash = Utils.createHash(username, password);
             UserObject userObject = new UserObject(username,password,hash);
+            userObject.setCounterLogins(0);
+            userObject.setFirstLogin(true);
             success = persist.addAccount(userObject);
         }
 
@@ -57,20 +59,17 @@ public class TestController {
 
 
     @RequestMapping("membership")
-    public void updateMembership(String token ,String organizationName,boolean haveMembership){ persist.updateMembership(token,organizationName,haveMembership);}
+    public void updateMembership(String token ,int organizationId,boolean haveMembership){ persist.updateMembership(token,organizationId,haveMembership);}
 
 
-
+    @RequestMapping("finish-settings")
+    public void setFirstLoginToFalse(String token){persist.}
 
     @RequestMapping("is-first-login")
     public boolean cheakFirstLogin(String token){
-        return persist.getCounterLogins(token)==1;
+        return persist.cheakFirstLogin(token);
     }
 
-    @RequestMapping("is-blocked")
-    public boolean cheakUserBlocked(String token){
-        return persist.getCounterLogins(token)>=5;
-    }
 
     @RequestMapping("get-relevant-sales")
     public List<DiscountObject> getSalesRelevant(String token ){
