@@ -26,10 +26,13 @@ public class StoreObject {
     private Set<DiscountObject> discount = new HashSet<DiscountObject>();
 
 
-    public StoreObject(String name_of_store) {
-        this.name = name_of_store;
-
+    public StoreObject(StoreObject store){
+            this.discount=store.discount;
+            this.content=store.content;
+            this.id=store.id;
+            this.name=store.name;
     }
+
 
     public StoreObject() {
 
@@ -43,6 +46,31 @@ public class StoreObject {
         this.name = name_of_store;
     }
 
+    public int getId() {
+        return id;
+    }
 
 
+
+
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getContent() {
+        return content;
+    }
+
+    public void setContent(String content) {
+        this.content = content;
+    }
+
+    public Set<DiscountObject> getDiscount() {
+        return discount;
+    }
+
+    public void setDiscount(Set<DiscountObject> discount) {
+        this.discount = discount;
+    }
 }

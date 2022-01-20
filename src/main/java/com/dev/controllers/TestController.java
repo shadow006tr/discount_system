@@ -2,6 +2,7 @@ package com.dev.controllers;
 
 import com.dev.Persist;
 import com.dev.objects.DiscountObject;
+import com.dev.objects.OrganizationObject;
 import com.dev.objects.StoreObject;
 import com.dev.objects.UserObject;
 
@@ -63,7 +64,7 @@ public class TestController {
 
 
     @RequestMapping("finish-settings")
-    public void setFirstLoginToFalse(String token){persist.}
+    public void setFirstLoginToFalse(String token){persist.setFirstLoginToFalse(token);}
 
     @RequestMapping("is-first-login")
     public boolean cheakFirstLogin(String token){
@@ -81,8 +82,8 @@ public class TestController {
     }
 
     @RequestMapping("get-all-shops")
-    public List <StoreObject> getAllShops(){
-        return persist.getAllShops();
+    public List<StoreObject> getAllShops(){
+       return persist.getAllShops();
     }
 
 

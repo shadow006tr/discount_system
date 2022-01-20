@@ -1,5 +1,7 @@
 package com.dev.objects;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.util.HashSet;
 import java.util.List;
@@ -20,20 +22,26 @@ public class OrganizationObject {
     private String organizationName;
 
 
+    public OrganizationObject(int id,String name){
+        this.organizationId=id;
+        this.organizationName=name;
+    }
 
-
-
-
-
+    @JsonIgnore
     @ManyToMany
     @JoinTable (name = "user_organization", joinColumns = {@JoinColumn(name="organizationId")},
             inverseJoinColumns = {@JoinColumn(name = "userId")})
     Set<UserObject> users = new HashSet<>();
 
+    @JsonIgnore
     @ManyToMany
     @JoinTable (name = "organization_discount", joinColumns = {@JoinColumn(name="organizationId")},
             inverseJoinColumns = {@JoinColumn(name = "operationId")})
     Set<DiscountObject> operation = new HashSet<>();
+
+    public OrganizationObject() {
+
+    }
 
     public Set<UserObject> getUsers() {
         return users;

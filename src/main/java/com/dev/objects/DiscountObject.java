@@ -44,7 +44,15 @@ public class DiscountObject {
         this.discountEnd = discountEnd;
         this.isGlobal = isGlobal;
     }
-
+    public DiscountObject(int discountId,String discount, Date discountStart, Date discountEnd, boolean isGlobal,Set<OrganizationObject> org,boolean relevantFotUser) {
+        this.discountId=discountId;
+        this.discount = discount;
+        this.discountStart = discountStart;
+        this.discountEnd = discountEnd;
+        this.isGlobal = isGlobal;
+        this.relevantFotUser=relevantFotUser;
+        this.organization=org;
+    }
     public DiscountObject() {
 
     }

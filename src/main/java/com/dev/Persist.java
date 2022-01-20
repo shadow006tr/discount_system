@@ -8,7 +8,8 @@ import org.hibernate.Transaction;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.List;
+
+import java.util.*;
 
 @Component
 public class Persist {
@@ -21,18 +22,29 @@ public class Persist {
     }
 
     public  List<DiscountObject> getSalesRelevantForUser(String token) {
-        List<DiscountObject> discounts = null;
+        List<DiscountObject> discounts = new ArrayList<DiscountObject>();
         Session session = sessionFactory.openSession();
         UserObject user=getUserFromDatabaseWithToken(session,token);
+
         if (user!=null) {
             for (OrganizationObject org : user.getOrganizations()) {
                 for (DiscountObject discount : org.getOperation()) {
+                    discount.setOrganization(this.setOfOrganizationsWithOnlyNamesAndId(discount));
                     discounts.add(discount);
                 }
             }
         }
         session.close();
         return discounts;
+    }
+
+    private Set<OrganizationObject> setOfOrganizationsWithOnlyNamesAndId(DiscountObject discount) {
+
+        Set<OrganizationObject> organizations = new HashSet<OrganizationObject>();
+        for(OrganizationObject organization :discount.getOrganization()){
+            organizations.add(new OrganizationObject(organization.getOrganizationId(),organization.getOrganizationName()));
+        }
+        return organizations;
     }
 
     public String getTokenByUsernameAndPassword(String username, String password) {
@@ -144,4 +156,15 @@ public class Persist {
         return u.getFirstLogin();
 
     }
-}
+
+    public void setFirstLoginToFalse(String token) {
+        Session session = sessionFactory.openSession();
+        UserObject user=getUserFromDatabaseWithToken(session,token);
+        Transaction transaction = session.beginTransaction();
+        user.setFirstLogin(false);
+        session.saveOrUpdate(user);
+        transaction.commit();
+        session.close();
+    }
+
+    }
