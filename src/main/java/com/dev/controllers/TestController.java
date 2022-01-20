@@ -86,6 +86,8 @@ public class TestController {
        return persist.getAllShops();
     }
 
+    @RequestMapping("get-all-organizations")
+    public List<OrganizationObject>getAllOrganizations(){return persist.getAllOrganizations();}
 
 
 

@@ -167,4 +167,10 @@ public class Persist {
         session.close();
     }
 
+    public List<OrganizationObject> getAllOrganizations() {
+        Session session = sessionFactory.openSession();
+        List<OrganizationObject> organizations =(List<OrganizationObject>)session.createCriteria(OrganizationObject.class).list();
+        session.close();
+        return organizations;
     }
+}
