@@ -6,6 +6,7 @@ import javax.persistence.*;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.sql.Blob;
 
 @Entity
 @Table(name = "organizations")
@@ -26,6 +27,9 @@ public class OrganizationObject {
         this.organizationId=id;
         this.organizationName=name;
     }
+
+    @Column(name = "IMAGE")
+    private Blob image;
 
     @JsonIgnore
     @ManyToMany
@@ -67,5 +71,11 @@ public class OrganizationObject {
 
     public void setOrganizationName(String organizationName) { this.organizationName = organizationName; }
 
+    public Blob getImage() {
+        return image;
+    }
 
+    public void setImage(Blob image) {
+        this.image = image;
+    }
 }

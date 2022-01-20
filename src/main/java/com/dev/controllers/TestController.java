@@ -72,10 +72,7 @@ public class TestController {
     }
 
 
-    @RequestMapping("get-relevant-sales")
-    public List<DiscountObject> getSalesRelevant(String token ){
-        return persist.getSalesRelevantForUser(token);
-    }
+
     @RequestMapping("get-all-sales")
     public List<DiscountObject> getAllSales(String token ){
         return persist.getAllSales(token);
@@ -89,6 +86,10 @@ public class TestController {
     @RequestMapping("get-all-organizations")
     public List<OrganizationObject>getAllOrganizations(){return persist.getAllOrganizations();}
 
+    @RequestMapping("save-image-for-organization")
+    public void saveImage(int id,String name){
+        persist.saveAnImage(id,name);
+    }
 
 
 

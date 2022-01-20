@@ -6,13 +6,16 @@ import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 @Component
 public class MessagesHandler extends TextWebSocketHandler {
 
     private static List<WebSocketSession> sessionList = new CopyOnWriteArrayList<>();
+    private static Map <String , WebSocketSession>sessionMap =new HashMap<>();
     private static int totalSessions;
 
 //    @PostConstruct
@@ -34,7 +37,8 @@ public class MessagesHandler extends TextWebSocketHandler {
     @Override
     public void afterConnectionEstablished(WebSocketSession session) throws Exception {
         super.afterConnectionEstablished(session);
-//        Map<String, String> map = Utils.splitQuery(session.getUri().getQuery());
+        Map<String, String> map = Utils.splitQuery(session.getUri().getQuery());
+        sessionMap.put(map.get("token"),session);
         sessionList.add(session);
         totalSessions = sessionList.size();
         System.out.println("afterConnectionEstablished");

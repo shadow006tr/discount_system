@@ -2,13 +2,20 @@ package com.dev;
 
 
 import com.dev.objects.*;
+import org.aspectj.weaver.ast.Or;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
+import org.hibernate.engine.jdbc.BlobProxy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.IOException;
 import java.util.*;
 
 @Component
@@ -105,7 +112,7 @@ public class Persist {
         Session session = sessionFactory.openSession();
         Transaction transaction = session.beginTransaction();
         UserObject userObject = getUserFromDatabaseWithToken(session,token);
-        OrganizationObject organization =getOrganizationFromDatabaseWithName(session,id);
+        OrganizationObject organization =getOrganizationFromDatabaseWithId(session,id);
         if (doMembership){
             userObject.addOrganization(organization);
         }else{
@@ -116,15 +123,7 @@ public class Persist {
         session.close();
     }
 
-    private OrganizationObject getOrganizationFromDatabaseWithName(Session session, int id ){
-        return (OrganizationObject)session.createQuery("FROM OrganizationObject WHERE id=:id").setParameter("id",id).uniqueResult();
-    }
 
-    private UserObject getUserFromDatabaseWithToken(Session session, String token) {
-        return (UserObject) session.createQuery("FROM UserObject WHERE token = :token")
-                .setParameter("token", token)
-                .uniqueResult();
-    }
 
 //    This function returns the whole sales and check if the discount is relevant for user
     public List<DiscountObject> getAllSales(String token){
@@ -172,5 +171,43 @@ public class Persist {
         List<OrganizationObject> organizations =(List<OrganizationObject>)session.createCriteria(OrganizationObject.class).list();
         session.close();
         return organizations;
+    }
+    public void saveAnImage(int id,String nameOfPicture){
+        Session session = sessionFactory.openSession();
+        Transaction  transaction = session.beginTransaction();
+
+        OrganizationObject organization=this.getOrganizationFromDatabaseWithId(session,id);
+        session.doWork(connection -> {organization.setImage(BlobProxy.generateProxy(getImage(nameOfPicture)));});
+        session.saveOrUpdate(organization);
+        transaction.commit();
+        System.out.println("Image is saved successfully.");
+
+    }
+
+
+   private byte[] getImage(String path) {
+        String dir="C:\\Users\\USER\\Pictures\\ProjectDiscountImages\\";
+        File file =new File(dir+path+".png");
+        if(file.exists()){
+            try {
+                BufferedImage bufferedImage= ImageIO.read(file);
+                ByteArrayOutputStream byteOutStream=new ByteArrayOutputStream();
+                ImageIO.write(bufferedImage, "png", byteOutStream);
+                return byteOutStream.toByteArray();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        return null;
+    }
+
+    private OrganizationObject getOrganizationFromDatabaseWithId(Session session, int id ){
+        return (OrganizationObject)session.createQuery("FROM OrganizationObject WHERE id=:id").setParameter("id",id).uniqueResult();
+    }
+
+    private UserObject getUserFromDatabaseWithToken(Session session, String token) {
+        return (UserObject) session.createQuery("FROM UserObject WHERE token = :token")
+                .setParameter("token", token)
+                .uniqueResult();
     }
 }
