@@ -7,15 +7,21 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.engine.jdbc.BlobProxy;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.expression.spel.ast.NullLiteral;
 import org.springframework.stereotype.Component;
 
 
 import javax.imageio.ImageIO;
+import javax.xml.bind.DatatypeConverter;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.sql.Blob;
+import java.sql.SQLException;
 import java.util.*;
 
 @Component
@@ -166,12 +172,33 @@ public class Persist {
         session.close();
     }
 
-    public List<OrganizationObject> getAllOrganizations() {
-        Session session = sessionFactory.openSession();
-        List<OrganizationObject> organizations =(List<OrganizationObject>)session.createCriteria(OrganizationObject.class).list();
-        session.close();
-        return organizations;
+    public List<OrganizationObject> getAllOrganizations() throws SQLException {
+        try{
+            Session session = sessionFactory.openSession();
+            List<OrganizationObject> organizations =(List<OrganizationObject>)session.createCriteria(OrganizationObject.class).list();
+            for (OrganizationObject organization :organizations){
+               this.setBlobToString(organization);
+            }
+            session.close();
+            return organizations;
+        }
+        catch (Exception e){
+            System.err.println("Got an exception!");
+            System.err.println(e.getMessage());
+            System.err.println(e.getCause());
+        }
+        return null;
     }
+
+    private void setBlobToString(OrganizationObject organization) throws SQLException, UnsupportedEncodingException {
+        Blob image=organization.getImage();
+        byte[] bdata = image.getBytes(1, (int) image.length());
+        String data = new String(bdata);
+        organization.setStringImage( data);
+    }
+
+
+
     public void saveAnImage(int id,String nameOfPicture){
         Session session = sessionFactory.openSession();
         Transaction  transaction = session.beginTransaction();

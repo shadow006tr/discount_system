@@ -28,6 +28,7 @@ public class OrganizationObject {
         this.organizationName=name;
     }
 
+    @JsonIgnore
     @Column(name = "IMAGE")
     private Blob image;
 
@@ -42,6 +43,9 @@ public class OrganizationObject {
     @JoinTable (name = "organization_discount", joinColumns = {@JoinColumn(name="organizationId")},
             inverseJoinColumns = {@JoinColumn(name = "operationId")})
     Set<DiscountObject> operation = new HashSet<>();
+
+    @Transient
+    private String stringImage;
 
     public OrganizationObject() {
 
@@ -77,5 +81,13 @@ public class OrganizationObject {
 
     public void setImage(Blob image) {
         this.image = image;
+    }
+
+    public String getStringImage() {
+        return stringImage;
+    }
+
+    public void setStringImage(String stringImage) {
+        this.stringImage = stringImage;
     }
 }

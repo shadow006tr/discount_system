@@ -8,6 +8,7 @@ import com.dev.objects.UserObject;
 
 import com.dev.utils.Utils;
 import org.hibernate.engine.jdbc.StreamUtils;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -22,6 +23,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 
+import java.sql.SQLException;
 import java.util.List;
 
 
@@ -84,12 +86,16 @@ public class TestController {
     }
 
     @RequestMapping("get-all-organizations")
-    public List<OrganizationObject>getAllOrganizations(){return persist.getAllOrganizations();}
+    public List<OrganizationObject> getAllOrganizations() throws SQLException {
+        JSONObject obj=new JSONObject();
+        return persist.getAllOrganizations();}
 
     @RequestMapping("save-image-for-organization")
     public void saveImage(int id,String name){
         persist.saveAnImage(id,name);
     }
+
+
 
 
 
