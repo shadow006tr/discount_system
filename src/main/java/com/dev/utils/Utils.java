@@ -6,8 +6,9 @@ import java.net.URLDecoder;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
-
+import com.dev.objects.*;
 public class Utils {
 
     public static String createHash (String username, String password) {
@@ -39,5 +40,7 @@ public class Utils {
         }
         return queryMap;
     }
+
+
 
 }

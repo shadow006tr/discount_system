@@ -34,22 +34,7 @@ public class Persist {
         this.sessionFactory = sf;
     }
 
-    public  List<DiscountObject> getSalesRelevantForUser(String token) {
-        List<DiscountObject> discounts = new ArrayList<DiscountObject>();
-        Session session = sessionFactory.openSession();
-        UserObject user=getUserFromDatabaseWithToken(session,token);
 
-        if (user!=null) {
-            for (OrganizationObject org : user.getOrganizations()) {
-                for (DiscountObject discount : org.getOperation()) {
-                    discount.setOrganization(this.setOfOrganizationsWithOnlyNamesAndId(discount));
-                    discounts.add(discount);
-                }
-            }
-        }
-        session.close();
-        return discounts;
-    }
 
     private Set<OrganizationObject> setOfOrganizationsWithOnlyNamesAndId(DiscountObject discount) {
 
@@ -131,20 +116,16 @@ public class Persist {
 
 
 
-//    This function returns the whole sales and check if the discount is relevant for user
-    public List<DiscountObject> getAllSales(String token){
-        List<DiscountObject> discounts=null;
-        Session session = sessionFactory.openSession();
-        discounts=(List<DiscountObject>)session.createQuery("FROM DiscountObject ").list();
-        UserObject user =getUserFromDatabaseWithToken(session,token);
+//    This function returns the whole sales who relevant for user
+    public List<DiscountObject> getSalesRelevantForUser(String token){
+        List<DiscountObject> user_discounts=new ArrayList<>();
+        List <DiscountObject> discounts=this.getAllSales(token);
        for(DiscountObject discount:discounts){
-           for(OrganizationObject org :user.getOrganizations()){
-                if(discount.getOrganization().contains(org)){
-                    discount.setRelevantFotUser(true);
+                if (discount.isRelevantFotUser()){
+                    user_discounts.add(discount);
                 }
            }
-       }
-        return discounts;
+        return user_discounts;
     }
 
 
@@ -176,39 +157,29 @@ public class Persist {
         try{
             Session session = sessionFactory.openSession();
             List<OrganizationObject> organizations =(List<OrganizationObject>)session.createCriteria(OrganizationObject.class).list();
-            for (OrganizationObject organization :organizations){
-               this.setBlobToString(organization);
-            }
             session.close();
             return organizations;
         }
         catch (Exception e){
             System.err.println("Got an exception!");
             System.err.println(e.getMessage());
-            System.err.println(e.getCause());
+
         }
         return null;
     }
 
-    private void setBlobToString(OrganizationObject organization) throws SQLException, UnsupportedEncodingException {
-        Blob image=organization.getImage();
-        byte[] bdata = image.getBytes(1, (int) image.length());
-        organization.setImageArray(bdata);
-    }
 
 
-
-    public void saveAnImage(int id,String nameOfPicture){
+    public List<DiscountObject> getAllSales(String token){
         Session session = sessionFactory.openSession();
-        Transaction  transaction = session.beginTransaction();
-
-        OrganizationObject organization=this.getOrganizationFromDatabaseWithId(session,id);
-        session.doWork(connection -> {organization.setImage(BlobProxy.generateProxy(getImage(nameOfPicture)));});
-        session.saveOrUpdate(organization);
-        transaction.commit();
-        System.out.println("Image is saved successfully.");
-
+        List<DiscountObject> discounts =(List<DiscountObject>)session.createCriteria(DiscountObject.class).list();
+        this.setAllSalesRelevantToUser(token,discounts,session);
+        session.close();
+        return discounts;
     }
+
+
+
 
 
    private byte[] getImage(String path) {
@@ -236,4 +207,16 @@ public class Persist {
                 .setParameter("token", token)
                 .uniqueResult();
     }
+
+    private void setAllSalesRelevantToUser(String token,List<DiscountObject> discounts,Session session){
+        Set<OrganizationObject> organizations=  this.getUserFromDatabaseWithToken(session,token).getOrganizations();
+        for (DiscountObject discount:discounts){
+            for(OrganizationObject userOrganization :organizations){
+                if (discount.getOrganization().contains(userOrganization)|| discount.isGlobal()){
+                    discount.setRelevantFotUser(true);
+                }
+            }
+        }
+    }
+
 }

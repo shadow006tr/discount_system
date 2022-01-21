@@ -28,9 +28,8 @@ public class OrganizationObject {
         this.organizationName=name;
     }
 
-    @JsonIgnore
-    @Column(name = "IMAGE")
-    private Blob image;
+   @Column
+   private String url;
 
     @JsonIgnore
     @ManyToMany
@@ -44,8 +43,7 @@ public class OrganizationObject {
             inverseJoinColumns = {@JoinColumn(name = "operationId")})
     Set<DiscountObject> operation = new HashSet<>();
 
-    @Transient
-    private byte[] imageArray;
+
 
     public OrganizationObject() {
 
@@ -75,19 +73,12 @@ public class OrganizationObject {
 
     public void setOrganizationName(String organizationName) { this.organizationName = organizationName; }
 
-    public Blob getImage() {
-        return image;
+
+    public String getUrl() {
+        return url;
     }
 
-    public void setImage(Blob image) {
-        this.image = image;
-    }
-
-    public byte[] getImageArray() {
-        return imageArray;
-    }
-
-    public void setImageArray(byte[] imageArray) {
-        this.imageArray = imageArray;
+    public void setUrl(String url) {
+        this.url = url;
     }
 }

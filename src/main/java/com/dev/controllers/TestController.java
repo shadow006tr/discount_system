@@ -60,7 +60,6 @@ public class TestController {
     }
 
 
-
     @RequestMapping("membership")
     public void updateMembership(String token ,int organizationId,boolean haveMembership){ persist.updateMembership(token,organizationId,haveMembership);}
 
@@ -76,7 +75,7 @@ public class TestController {
 
 
     @RequestMapping("get-all-sales")
-    public List<DiscountObject> getAllSales(String token ){
+    public List<DiscountObject> getAllSales(String token){
         return persist.getAllSales(token);
     }
 
@@ -90,10 +89,6 @@ public class TestController {
         JSONObject obj=new JSONObject();
         return persist.getAllOrganizations();}
 
-    @RequestMapping("save-image-for-organization")
-    public void saveImage(int id,String name){
-        persist.saveAnImage(id,name);
-    }
 
 
 
