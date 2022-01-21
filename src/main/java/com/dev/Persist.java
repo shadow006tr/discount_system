@@ -193,8 +193,7 @@ public class Persist {
     private void setBlobToString(OrganizationObject organization) throws SQLException, UnsupportedEncodingException {
         Blob image=organization.getImage();
         byte[] bdata = image.getBytes(1, (int) image.length());
-        String data = new String(bdata);
-        organization.setStringImage( data);
+        organization.setImageArray(bdata);
     }
 
 

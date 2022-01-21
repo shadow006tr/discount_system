@@ -45,7 +45,7 @@ public class OrganizationObject {
     Set<DiscountObject> operation = new HashSet<>();
 
     @Transient
-    private String stringImage;
+    private byte[] imageArray;
 
     public OrganizationObject() {
 
@@ -83,11 +83,11 @@ public class OrganizationObject {
         this.image = image;
     }
 
-    public String getStringImage() {
-        return stringImage;
+    public byte[] getImageArray() {
+        return imageArray;
     }
 
-    public void setStringImage(String stringImage) {
-        this.stringImage = stringImage;
+    public void setImageArray(byte[] imageArray) {
+        this.imageArray = imageArray;
     }
 }
