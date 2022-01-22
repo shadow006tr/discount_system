@@ -26,7 +26,10 @@ import java.util.*;
 
 @Component
 public class Persist {
-    static final String BLOCKED_USER="-1";
+    private final String BLOCKED_USER="-1";
+    private final String PASSWORD_INCORRECT="-2";
+    private final String USERNAME_AND_PASSWORD_INCORRECT="-3";
+
     private final SessionFactory sessionFactory;
 
     @Autowired
@@ -45,8 +48,13 @@ public class Persist {
         return organizations;
     }
 
+//    This function checks if the username and the password are correct. it returns:
+//    -1:Blocked user
+//    -2:Password incorrect
+//    -3:Username and Password Incorrect
+//    if all good the function returns the token of the user
     public String getTokenByUsernameAndPassword(String username, String password) {
-        String token = null;
+        String token = this.USERNAME_AND_PASSWORD_INCORRECT;
         Session session = sessionFactory.openSession();
         UserObject userObject = (UserObject) session.createQuery("FROM UserObject WHERE username = :username AND password = :password")
                 .setParameter("username", username)
@@ -54,8 +62,15 @@ public class Persist {
                 .uniqueResult();
 
         if (userObject != null) {
-            if (userObject.getCounterLogins()>=5) token=BLOCKED_USER;
+            if (userObject.getCounterLogins()>=5) token=this.BLOCKED_USER;
             else token = userObject.getToken();
+        }
+        else{
+            UserObject userWithUsername = (UserObject) session.createQuery("FROM UserObject WHERE username = :username").uniqueResult();
+            if(userWithUsername!=null){
+                token=this.PASSWORD_INCORRECT;
+                this.updateCounter(userWithUsername,session);
+            }
         }
         session.close();
         return token;
