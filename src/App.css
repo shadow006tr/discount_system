@@ -1,7 +1,39 @@
 body {
     background-image: url("images/background_light.jpg");
+    background-size: cover;
     padding: 3rem;
     height: 100%;
     width: 100%;
     position: absolute;
+}
+
+.vertical-center {
+    margin: 0;
+    position: absolute;
+    top: 50%;
+    -ms-transform: translateY(-50%);
+    transform: translateY(-25%);
+}
+
+.users {
+    width: 50%;
+}
+
+.orgButton {
+    focusable: false;
+}
+
+.orgButton:hover
+{
+    background-color: rgb(240, 240, 240)!important;}
+
+/* Center All */
+.all-center {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    margin: auto;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
 }

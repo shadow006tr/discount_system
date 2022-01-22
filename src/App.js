@@ -9,6 +9,8 @@ import NavbarComponent from "./components/layout/NavbarComponent";
 import Alert from './components/layout/Alert';
 import Login from "./components/users/Login";
 import SignUp from "./components/users/SignUp";
+import Settings from "./components/pages/Settings"
+import Discounts from "./components/pages/Discounts";
 import NotFound from "./components/pages/NotFound";
 
 import AlertState from './context/alert/AlertState'
@@ -21,23 +23,25 @@ const App = () => {
     const [token, setToken] = useState('');
 
     useEffect(() => {
+
         const cookies = new Cookies();
-        if (cookies.get("logged_in")) {
+        if (cookies.get("token")) {
             setLoggedIn(true);
-            setToken(cookies.get("logged_in"));
+            setToken(cookies.get("token"));
         }
     }, []);
 
     return (
         <AlertState>
             <Router>
-                <NavbarComponent />
-                <Container fluid className="app-container">
+                {token}
+                <NavbarComponent isAuth = {isLoggedIn}/>
+                <Container className="app-container">
                     <Alert />
                     {isLoggedIn ?
                         <Routes>
-                            {/*<Route path="/" element={<Messenger token={token} />} />*/}
-                            {/*<Route path="/send" element={<MessageSender />} />*/}
+                            <Route path="/" element={<Discounts />}/>
+                            <Route path="/settings" element={<Settings />} />
                         </Routes> :
                         <Routes>
                             <Route path="/" element={<Login />} />
