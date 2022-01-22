@@ -34,7 +34,8 @@ public class UserObject {
 
     @ManyToMany
     @JoinTable (name = "user_organization", joinColumns = {@JoinColumn(name="UserId")},
-            inverseJoinColumns = {@JoinColumn(name = "organizationId")})
+            inverseJoinColumns = {@JoinColumn(name = "organizationId")}
+    )
     Set<OrganizationObject> organizations = new HashSet<>();
 
     public UserObject() {

@@ -1,5 +1,7 @@
 package com.dev.objects;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.util.Date;
 import java.util.HashSet;
@@ -28,6 +30,7 @@ public class DiscountObject {
     @Column
     private boolean isGlobal;
 
+    @JsonIgnore
     @ManyToMany
     @JoinTable (name = "organization_discount", joinColumns = {@JoinColumn(name="operationId")},
             inverseJoinColumns = {@JoinColumn(name = "organizationId")})

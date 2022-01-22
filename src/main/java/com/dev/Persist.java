@@ -26,9 +26,6 @@ import java.util.*;
 
 @Component
 public class Persist {
-    private final String BLOCKED_USER="-1";
-    private final String PASSWORD_INCORRECT="-2";
-    private final String USERNAME_AND_PASSWORD_INCORRECT="-3";
 
     private final SessionFactory sessionFactory;
 
@@ -54,7 +51,10 @@ public class Persist {
 //    -3:Username and Password Incorrect
 //    if all good the function returns the token of the user
     public String getTokenByUsernameAndPassword(String username, String password) {
-        String token = this.USERNAME_AND_PASSWORD_INCORRECT;
+        final String BLOCKED_USER = "-1";
+        final String  PASSWORD_INCORRECT = "-2";
+        final String USERNAME_AND_PASSWORD_INCORRECT = "-3";
+        String token = USERNAME_AND_PASSWORD_INCORRECT;
         Session session = sessionFactory.openSession();
         UserObject userObject = (UserObject) session.createQuery("FROM UserObject WHERE username = :username AND password = :password")
                 .setParameter("username", username)
@@ -62,13 +62,15 @@ public class Persist {
                 .uniqueResult();
 
         if (userObject != null) {
-            if (userObject.getCounterLogins()>=5) token=this.BLOCKED_USER;
+
+            if (userObject.getCounterLogins()>=5) token= BLOCKED_USER;
             else token = userObject.getToken();
         }
         else{
             UserObject userWithUsername = (UserObject) session.createQuery("FROM UserObject WHERE username = :username").uniqueResult();
             if(userWithUsername!=null){
-                token=this.PASSWORD_INCORRECT;
+
+                token= PASSWORD_INCORRECT;
                 this.updateCounter(userWithUsername,session);
             }
         }
@@ -76,12 +78,7 @@ public class Persist {
         return token;
     }
 
-    private void updateCounter(UserObject userObject, Session session) {
-        userObject.setCounterLogins(userObject.getCounterLogins()+1);
-        Transaction transaction = session.beginTransaction();
-        session.saveOrUpdate(userObject);
-        transaction.commit();
-    }
+
 
     public boolean addAccount (UserObject userObject) {
         boolean success = false;
@@ -193,26 +190,7 @@ public class Persist {
         return discounts;
     }
 
-
-
-
-
-   private byte[] getImage(String path) {
-        String dir="C:\\Users\\USER\\Pictures\\ProjectDiscountImages\\";
-        File file =new File(dir+path+".png");
-        if(file.exists()){
-            try {
-                BufferedImage bufferedImage= ImageIO.read(file);
-                ByteArrayOutputStream byteOutStream=new ByteArrayOutputStream();
-                ImageIO.write(bufferedImage, "png", byteOutStream);
-                return byteOutStream.toByteArray();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-        return null;
-    }
-
+//    Private functions
     private OrganizationObject getOrganizationFromDatabaseWithId(Session session, int id ){
         return (OrganizationObject)session.createQuery("FROM OrganizationObject WHERE id=:id").setParameter("id",id).uniqueResult();
     }
@@ -224,14 +202,23 @@ public class Persist {
     }
 
     private void setAllSalesRelevantToUser(String token,List<DiscountObject> discounts,Session session){
-        Set<OrganizationObject> organizations=  this.getUserFromDatabaseWithToken(session,token).getOrganizations();
+        UserObject userObject= this.getUserFromDatabaseWithToken(session,token);
         for (DiscountObject discount:discounts){
-            for(OrganizationObject userOrganization :organizations){
-                if (discount.getOrganization().contains(userOrganization)|| discount.isGlobal()){
+            for(OrganizationObject userOrganization :userObject.getOrganizations()){
+                if (discount.getOrganization().contains(userOrganization)){
                     discount.setRelevantFotUser(true);
                 }
+            }
+            if (discount.isGlobal()){
+                discount.setRelevantFotUser(true);
             }
         }
     }
 
+    private void updateCounter(UserObject userObject, Session session) {
+        userObject.setCounterLogins(userObject.getCounterLogins()+1);
+        Transaction transaction = session.beginTransaction();
+        session.saveOrUpdate(userObject);
+        transaction.commit();
+    }
 }

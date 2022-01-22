@@ -89,7 +89,7 @@ public class TestController {
         JSONObject obj=new JSONObject();
         return persist.getAllOrganizations();}
 
-    @RequestMapping("sale-for-dashboard")
+    @RequestMapping("sales-for-dashboard")
     public List<DiscountObject> salesRelevantForUser(String token){
         return persist.getSalesRelevantForUser(token);
     }

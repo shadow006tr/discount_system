@@ -37,7 +37,7 @@ public class OrganizationObject {
             inverseJoinColumns = {@JoinColumn(name = "userId")})
     Set<UserObject> users = new HashSet<>();
 
-    @JsonIgnore
+
     @ManyToMany
     @JoinTable (name = "organization_discount", joinColumns = {@JoinColumn(name="organizationId")},
             inverseJoinColumns = {@JoinColumn(name = "operationId")})
