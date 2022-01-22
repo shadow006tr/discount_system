@@ -1,5 +1,4 @@
 import Cookies from "universal-cookie";
-import React from "react";
 
 function LogOut() {
     const cookies = new Cookies();
