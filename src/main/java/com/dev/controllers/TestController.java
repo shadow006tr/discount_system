@@ -7,24 +7,16 @@ import com.dev.objects.StoreObject;
 import com.dev.objects.UserObject;
 
 import com.dev.utils.Utils;
-import org.hibernate.engine.jdbc.StreamUtils;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.PostConstruct;
-import javax.servlet.http.HttpServletResponse;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
 
 import java.sql.SQLException;
-import java.util.List;
+
+import java.util.*;
 
 
 @RestController
@@ -95,7 +87,10 @@ public class TestController {
     }
 
 
-
+    @RequestMapping("get-organizations-of-user")
+    public Set<OrganizationObject> getOrganizationsOfUser(String token){
+        return persist.getOrganizationsOfUser(token);
+    }
 
 
 
