@@ -36,6 +36,8 @@ public class DiscountObject {
             inverseJoinColumns = {@JoinColumn(name = "organizationId")})
     Set<OrganizationObject> organization = new HashSet<>();
 
+
+
     @Transient
     private boolean relevantFotUser=false;
 

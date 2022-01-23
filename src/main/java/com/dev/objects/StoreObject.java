@@ -23,6 +23,7 @@ public class StoreObject {
 
 
     @OneToMany
+    @JoinColumn(name = "store_discount")
     private Set<DiscountObject> discount = new HashSet<DiscountObject>();
 
 

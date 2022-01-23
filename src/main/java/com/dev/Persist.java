@@ -237,4 +237,13 @@ public class Persist {
     }
 
 
+    public Set<DiscountObject> searchDiscounts(String query, List<DiscountObject> discounts) {
+        Set<DiscountObject> queryDiscounts=new HashSet<>();
+            for(DiscountObject discount :discounts){
+                if(discount.getDiscount().contains(query)){
+                    queryDiscounts.add(discount);
+                }
+            }
+        return queryDiscounts;
+    }
 }

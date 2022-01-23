@@ -98,6 +98,12 @@ public class TestController {
         return persist.checkUserConnectToOrganization(token,idOrganization);
     }
 
+    @RequestMapping("search-discounts")
+    public Set<DiscountObject> searchDiscounts(String token,String query){
+        List<DiscountObject> discounts=persist.getAllSales(token);
+        return persist.searchDiscounts(query,discounts);
     }
+    }
+
 
 
