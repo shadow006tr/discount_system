@@ -93,5 +93,11 @@ public class TestController {
     }
 
 
+    @RequestMapping("check-connection-to-organization")
+    public boolean cheakUserConnectToOrganization(String token,int idOrganization){
+        return persist.checkUserConnectToOrganization(token,idOrganization);
+    }
 
-}
+    }
+
+

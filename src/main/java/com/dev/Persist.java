@@ -197,6 +197,13 @@ public class Persist {
         return user.getOrganizations();
     }
 
+    public boolean checkUserConnectToOrganization(String token, int idOrganization) {
+        Set<OrganizationObject> organizations=this.getOrganizationsOfUser(token);
+        for(OrganizationObject organization :organizations){
+            if(organization.getOrganizationId()==idOrganization)return true;
+        }
+        return false;
+    }
 //    Private functions
     private OrganizationObject getOrganizationFromDatabaseWithId(Session session, int id ){
         return (OrganizationObject)session.createQuery("FROM OrganizationObject WHERE id=:id").setParameter("id",id).uniqueResult();
@@ -228,4 +235,6 @@ public class Persist {
         session.saveOrUpdate(userObject);
         transaction.commit();
     }
+
+
 }
