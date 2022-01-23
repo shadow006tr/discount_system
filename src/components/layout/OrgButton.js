@@ -1,12 +1,23 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import ToggleButton from "react-bootstrap/ToggleButton";
 import Col from "react-bootstrap/Col";
+import axios from "axios";
+import Cookies from "universal-cookie";
 
 const OrgButton = (props) => {
 
+    const [token, setToken] = useState('');
     const [checked, setChecked] = useState(false);
     const [outlineColor, setOutlineColor] = useState("black");
     const [outlineSize, setOutlineSize] = useState(1);
+
+    useEffect(() => {
+
+        const cookies = new Cookies();
+        if (cookies.get("token")) {
+            setToken(cookies.get("token"));
+        }
+    }, []);
 
     const check = (e) => {
         setChecked(e.currentTarget.checked);
@@ -17,6 +28,13 @@ const OrgButton = (props) => {
             setOutlineColor("#198754");
             setOutlineSize(5);
         }
+        axios.get("http://localhost:8989/membership", {
+            params: {
+                token: token,
+                organizationId: props.id,
+                haveMembership: !checked
+            }
+        })
         this.blur();
     }
 

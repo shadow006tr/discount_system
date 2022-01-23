@@ -34,7 +34,6 @@ const App = () => {
     return (
         <AlertState>
             <Router>
-                {token}
                 <NavbarComponent isAuth = {isLoggedIn}/>
                 <Container className="app-container">
                     <Alert />

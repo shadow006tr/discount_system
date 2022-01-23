@@ -6,18 +6,22 @@ import axios from "axios";
 const Discounts = () => {
 
     const [discounts, setDiscounts] = useState([]);
+    const [token, setToken] = useState('');
 
     useEffect(() => {
         const cookies = new Cookies();
-        axios.get("http://localhost:8989/get-all-sales", {
-            params: {
-                token: cookies.get("token")
-            }
-        })
-            .then((response) => {
-                setDiscounts(response.data)
+        if (cookies.get("token")) {
+            setToken(cookies.get("token"));
+            axios.get("http://localhost:8989/get-all-sales", {
+                params: {
+                    token: token
+                }
             })
-    }, [])
+                .then((response) => {
+                    setDiscounts(response.data)
+                })
+        }
+    }, [token])
 
     return (
         <div>
@@ -43,9 +47,9 @@ const Discounts = () => {
                         </div>
                     )
                 })
-            };
+            }
         </div>
-    );
+    )
 }
 
 export default Discounts;

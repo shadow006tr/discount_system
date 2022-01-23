@@ -39,10 +39,17 @@ const NavbarComponent = (props) => {
                         {isAuth ? <Nav.Link>Home</Nav.Link> : <Nav.Link>Login</Nav.Link>}
                         </LinkContainer>
 
+
+
                         {isAuth ?
-                            <LinkContainer to="/logout">
-                                <Nav.Link onClick={LogOut}>Log out</Nav.Link>
-                            </LinkContainer> :
+                            <>
+                                <LinkContainer to="/settings">
+                                    <Nav.Link >Settings</Nav.Link>
+                                </LinkContainer>
+                                <LinkContainer to="/logout">
+                                    <Nav.Link onClick={LogOut}>Log out</Nav.Link>
+                                </LinkContainer>
+                            </>:
                             <LinkContainer to="/sign-up">
                                 <Nav.Link>Sign-up</Nav.Link>
                             </LinkContainer>
