@@ -190,6 +190,13 @@ public class Persist {
         return discounts;
     }
 
+    public Set<OrganizationObject> getOrganizationsOfUser(String token) {
+        Session session= sessionFactory.openSession();
+        UserObject user= this.getUserFromDatabaseWithToken(session,token);
+        session.close();
+        return user.getOrganizations();
+    }
+
 //    Private functions
     private OrganizationObject getOrganizationFromDatabaseWithId(Session session, int id ){
         return (OrganizationObject)session.createQuery("FROM OrganizationObject WHERE id=:id").setParameter("id",id).uniqueResult();
