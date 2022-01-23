@@ -6,18 +6,9 @@ import Cookies from "universal-cookie";
 
 const OrgButton = (props) => {
 
-    const [token, setToken] = useState('');
-    const [checked, setChecked] = useState(false);
+    const [checked, setChecked] = useState(props.checked);
     const [outlineColor, setOutlineColor] = useState("black");
     const [outlineSize, setOutlineSize] = useState(1);
-
-    useEffect(() => {
-
-        const cookies = new Cookies();
-        if (cookies.get("token")) {
-            setToken(cookies.get("token"));
-        }
-    }, []);
 
     const check = (e) => {
         setChecked(e.currentTarget.checked);
@@ -30,7 +21,7 @@ const OrgButton = (props) => {
         }
         axios.get("http://localhost:8989/membership", {
             params: {
-                token: token,
+                token: props.token,
                 organizationId: props.id,
                 haveMembership: !checked
             }

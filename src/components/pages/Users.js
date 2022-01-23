@@ -56,14 +56,14 @@ const Users = (props) => {
                 .then((response) => {
 
                     switch (response.data) {
-                        case -1:
+                        case -3:
                             alertContext.setAlert('User with that number has not been found',
                                 'danger');
                             break;
-                        case 1:
+                        case -2:
                             alertContext.setAlert('Password incorrect!', 'danger');
                             break;
-                        case 2:
+                        case -1:
                             alertContext.setAlert(
                                 'Your account has been blocked! Please contact the Administrator',
                                 'danger');

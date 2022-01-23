@@ -20,14 +20,14 @@ import './App.css'
 
 const App = () => {
     const [isLoggedIn, setLoggedIn] = useState(false);
-    const [token, setToken] = useState('');
+    // const [token, setToken] = useState('');
 
     useEffect(() => {
 
         const cookies = new Cookies();
         if (cookies.get("token")) {
             setLoggedIn(true);
-            setToken(cookies.get("token"));
+            // setToken(cookies.get("token"));
         }
     }, []);
 

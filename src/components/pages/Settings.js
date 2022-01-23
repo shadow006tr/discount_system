@@ -9,13 +9,13 @@ import {Button} from "react-bootstrap";
 const Settings = () => {
 
     const [organizationIcons, setOrganizationIcons] = useState([]);
-
-    let token;
+    const [token, setToken] = useState("");
+    const [checked, setChecked] = useState(null);
 
     useEffect(() => {
 
         const cookies = new Cookies();
-        token = cookies.get("token");
+        setToken(cookies.get("token"));
 
         let data;
         let images = [];
@@ -24,18 +24,27 @@ const Settings = () => {
             .then((response) => {
                 data = response.data;
                 for (let i = 0; i < data.length; i++) {
+                    axios.get("http://localhost:8989/check-connection-to-organization", {
+                        params: {
+                            token: token,
+                            idOrganization: data[i].organizationId
+                        }
+                    })
+                        .then((response) => {
+                            setChecked(response.data)
+                        })
                     images.push(<OrgButton url={data[i].url}
                                            organizationName={data[i].organizationName}
                                            id={data[i].organizationId}
+                                           checked={checked}
+                                           token={token}
                     />)
                 }
                 setOrganizationIcons(images);
             });
-    }, []);
+    }, [token]);
 
     const handleSubmit = () => {
-        const cookies = new Cookies();
-        token = cookies.get("token");
 
         axios.get("http://localhost:8989/finish-settings", {params: {token}})
             .then(() => {
