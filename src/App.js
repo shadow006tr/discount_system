@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import {
     BrowserRouter as Router, Routes, Route
 } from 'react-router-dom';
@@ -14,45 +14,50 @@ import Discounts from "./components/pages/Discounts";
 import NotFound from "./components/pages/NotFound";
 
 import AlertState from './context/alert/AlertState'
+import TokenState from './context/token/TokenState'
+import TokenContext from "./context/token/tokenContext";
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css'
 
 const App = () => {
+
+    const tokenContext = useContext(TokenContext);
+
     const [isLoggedIn, setLoggedIn] = useState(false);
-    // const [token, setToken] = useState('');
 
     useEffect(() => {
-
         const cookies = new Cookies();
         if (cookies.get("token")) {
             setLoggedIn(true);
-            // setToken(cookies.get("token"));
+            // tokenContext.setToken(cookies.get("token"));
         }
     }, []);
 
     return (
-        <AlertState>
-            <Router>
-                <NavbarComponent isAuth = {isLoggedIn}/>
-                <Container className="app-container">
-                    <Alert />
-                    {isLoggedIn ?
+        <TokenState>
+            <AlertState>
+                <Router>
+                    <NavbarComponent isAuth = {isLoggedIn}/>
+                    <Container className="app-container">
+                        <Alert />
+                        {isLoggedIn ?
+                            <Routes>
+                                <Route path="/" element={<Discounts />}/>
+                                <Route path="/settings" element={<Settings />} />
+                            </Routes> :
+                            <Routes>
+                                <Route path="/" element={<Login />} />
+                                <Route path="/sign-up" element={<SignUp />} />
+                            </Routes>
+                        }
                         <Routes>
-                            <Route path="/" element={<Discounts />}/>
-                            <Route path="/settings" element={<Settings />} />
-                        </Routes> :
-                        <Routes>
-                            <Route path="/" element={<Login />} />
-                            <Route path="/sign-up" element={<SignUp />} />
+                            <Route element={<NotFound />} />
                         </Routes>
-                    }
-                    <Routes>
-                        <Route element={<NotFound />} />
-                    </Routes>
-                </Container>
-            </Router>
-        </AlertState>
+                    </Container>
+                </Router>
+            </AlertState>
+        </TokenState>
     );
 }
 

@@ -7,6 +7,7 @@ import axios from 'axios';
 import Cookies from 'universal-cookie';
 
 import AlertContext from '../../context/alert/alertContext';
+import TokenContext from "../../context/token/tokenContext";
 
 const Users = (props) => {
     const type = props.type;
@@ -15,6 +16,7 @@ const Users = (props) => {
 
 
     const alertContext = useContext(AlertContext);
+    const tokenContext = useContext(TokenContext);
 
     const [user, setUser] = useState('');
     const [pass, setPass] = useState('');
@@ -71,6 +73,7 @@ const Users = (props) => {
                         default:
                             const cookies = new Cookies();
                             cookies.set("token", response.data);
+                            tokenContext.setToken(response.data);
 
                             switch (type) {
                                 case 'Login':

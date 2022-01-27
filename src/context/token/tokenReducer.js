@@ -1,11 +1,9 @@
-import { SET_ALERT, REMOVE_ALERT } from '../types';
+import { SET_TOKEN } from '../types';
 
 const alertReducer = (state, action) => {
     switch (action.type) {
-        case SET_ALERT:
+        case SET_TOKEN:
             return action.payload;
-        case REMOVE_ALERT:
-            return null;
         default:
             return state;
     }

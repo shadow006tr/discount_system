@@ -2,7 +2,7 @@ import React, { useReducer } from 'react';
 import PropTypes from "prop-types";
 import AlertContext from './alertContext';
 import AlertReducer from './alertReducer';
-import { SET_ALERT, REMOVE_ALERT } from './types';
+import { SET_ALERT, REMOVE_ALERT } from '../types';
 
 const AlertState = props => {
     AlertState.propTypes = {
