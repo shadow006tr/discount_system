@@ -15,7 +15,7 @@ public class StoreObject {
     @Column(name="id")
     private int id;
 
-    @Column(name="name")
+    @Column(name="name" ,unique = true,nullable = false)
     private String name;
 
     @Column(name = "content")

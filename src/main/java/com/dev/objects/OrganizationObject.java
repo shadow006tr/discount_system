@@ -43,7 +43,8 @@ public class OrganizationObject {
             inverseJoinColumns = {@JoinColumn(name = "operationId")})
     Set<DiscountObject> operation = new HashSet<>();
 
-
+    @Transient
+    private boolean relevatForUser=false;
 
     public OrganizationObject() {
 
@@ -80,5 +81,13 @@ public class OrganizationObject {
 
     public void setUrl(String url) {
         this.url = url;
+    }
+
+    public boolean isRelevatForUser() {
+        return relevatForUser;
+    }
+
+    public void setRelevatForUser(boolean relevatForUser) {
+        this.relevatForUser = relevatForUser;
     }
 }

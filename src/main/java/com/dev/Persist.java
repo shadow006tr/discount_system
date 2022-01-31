@@ -165,10 +165,16 @@ public class Persist {
         session.close();
     }
 
-    public List<OrganizationObject> getAllOrganizations() throws SQLException {
+    public List<OrganizationObject> getAllOrganizations(String token) throws SQLException {
         try{
             Session session = sessionFactory.openSession();
+            Set userOrganizations=this.getOrganizationsOfUser(token);
             List<OrganizationObject> organizations =(List<OrganizationObject>)session.createCriteria(OrganizationObject.class).list();
+            for(OrganizationObject organizationObject:organizations){
+                for (OrganizationObject userOrg:organizations){
+                    if (organizationObject.equals(userOrg))organizationObject.setRelevatForUser(true);
+                }
+            }
             session.close();
             return organizations;
         }

@@ -15,7 +15,7 @@ public class UserObject {
     @Column
     public int id;
 
-    @Column(nullable = false)
+    @Column(nullable = false,unique = true)
     private String username;
 
     @Column(nullable = false)

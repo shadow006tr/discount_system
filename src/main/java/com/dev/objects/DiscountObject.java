@@ -18,7 +18,7 @@ public class DiscountObject {
     @Column
     public int discountId;
 
-    @Column
+    @Column(unique = true,nullable = false)
     private String discount;
 
     @Column
@@ -35,6 +35,8 @@ public class DiscountObject {
     @JoinTable (name = "organization_discount", joinColumns = {@JoinColumn(name="operationId")},
             inverseJoinColumns = {@JoinColumn(name = "organizationId")})
     Set<OrganizationObject> organization = new HashSet<>();
+
+
 
 
 

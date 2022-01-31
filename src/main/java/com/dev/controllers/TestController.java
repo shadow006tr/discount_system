@@ -77,9 +77,8 @@ public class TestController {
     }
 
     @RequestMapping("get-all-organizations")
-    public List<OrganizationObject> getAllOrganizations() throws SQLException {
-        JSONObject obj=new JSONObject();
-        return persist.getAllOrganizations();}
+    public List<OrganizationObject> getAllOrganizations(String token) throws SQLException {
+        return persist.getAllOrganizations(token);}
 
     @RequestMapping("sales-for-dashboard")
     public List<DiscountObject> salesRelevantForUser(String token){
